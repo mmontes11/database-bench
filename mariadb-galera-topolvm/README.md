@@ -4,6 +4,7 @@
 make mariadb
 make sysbench-prepare
 make sysbench
+make physicalbackup
 ```
 
 # sysbench
