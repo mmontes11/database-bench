@@ -29,6 +29,7 @@ spec:
             command:
               - sysbench
               - oltp_read_write
+              # - --rate=100
               - --tables=5
               - --table_size=1000000
               - --mysql-host=mariadb-primary.default.svc.cluster.local

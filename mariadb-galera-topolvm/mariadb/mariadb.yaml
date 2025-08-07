@@ -7,6 +7,21 @@ spec:
     name: mariadb
     key: root-password
 
+  # bootstrapFrom:
+  #   backupType: Physical
+  #   volume:
+  #     nfs:
+  #       server: 10.0.0.50
+  #       path: /volume1/mariadb
+  #   restoreJob:
+  #     resources:
+  #       requests:
+  #         cpu: 1
+  #         memory: 512Mi
+  #       limits:
+  #         cpu: 1
+  #         memory: 512Mi
+
   storage:
     size: 30Gi
     storageClassName: topolvm
