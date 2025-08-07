@@ -8,7 +8,7 @@ make sysbench
 
 # sysbench
 
-```bash
+```
 SQL statistics:
     queries performed:
         read:                            7962192
