@@ -7,7 +7,7 @@ make sysbench
 make physicalbackup
 ```
 
-# sysbench
+# sysbench (64 threads)
 
 ```
 SQL statistics:

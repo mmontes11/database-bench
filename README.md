@@ -3,6 +3,7 @@ Database benchmarks in Kubernetes
 
 ### Benchmarks
 
+- [mariadb-replication-topolvm](./mariadb-replication-topolvm/)
 - [mariadb-galera-topolvm](./mariadb-galera-topolvm/)
 
 ### Storage benchmarks

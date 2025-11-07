@@ -1,0 +1,41 @@
+apiVersion: k8s.mariadb.com/v1alpha1
+kind: PhysicalBackup
+metadata:
+  name: physicalbackup-s3
+spec:
+  mariaDbRef:
+    name: mariadb
+  schedule:
+    cron: "*/5 * * * *"
+    suspend: false
+    immediate: true
+  compression: bzip2
+  storage:
+    s3:
+      bucket: database
+      prefix: mariadb-repl/physical
+      endpoint: minio.storage.svc.cluster.local:443
+      accessKeyIdSecretKeyRef:
+        name: minio
+        key: access-key-id
+      secretAccessKeySecretKeyRef:
+        name: minio
+        key: secret-access-key
+      tls:
+        enabled: true
+        caSecretKeyRef:
+          name: homelab-bundle
+          key: ca.crt
+  timeout: 1h
+  podAffinity: true
+  tolerations:
+    - effect: NoSchedule
+      key: node.mmontes.io/type
+      value: compute-large
+  resources:
+    requests:
+      cpu: 1
+      memory: 512Mi
+    limits:
+      cpu: 1
+      memory: 512Mi

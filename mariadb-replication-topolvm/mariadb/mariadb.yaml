@@ -1,0 +1,138 @@
+apiVersion: k8s.mariadb.com/v1alpha1
+kind: MariaDB
+metadata:
+  name: mariadb
+spec:
+  rootPasswordSecretKeyRef:
+    name: mariadb
+    key: root-password
+
+  # maxScaleRef:
+  #   name: maxscale
+
+  # bootstrapFrom:
+  #   backupContentType: Physical
+  #   s3:
+  #     bucket: database
+  #     prefix: mariadb-repl/physical
+  #     endpoint: minio.storage.svc.cluster.local:443
+  #     accessKeyIdSecretKeyRef:
+  #       name: minio
+  #       key: access-key-id
+  #     secretAccessKeySecretKeyRef:
+  #       name: minio
+  #       key: secret-access-key
+  #     tls:
+  #       enabled: true
+  #       caSecretKeyRef:
+  #         name: homelab-bundle
+  #         key: ca.crt
+  #   restoreJob:
+  #     resources:
+  #       requests:
+  #         cpu: 1
+  #         memory: 512Mi
+  #       limits:
+  #         cpu: 1
+  #         memory: 512Mi
+
+  storage:
+    size: 30Gi
+    storageClassName: topolvm
+
+  replicas: 3
+
+  replication:
+    enabled: true
+    primary:
+      autoFailover: true
+      autoFailoverDelay: 0s
+    replica:
+      replPasswordSecretKeyRef:
+        name: mariadb
+        key: password
+      bootstrapFrom:
+        physicalBackupTemplateRef:
+          name: physicalbackup-tpl
+      recovery:
+        enabled: true
+        errorDurationThreshold: 30s
+    gtidStrictMode: true
+    # semiSyncAckTimeout: 10s
+    # semiSyncWaitPoint: AfterCommit
+    # syncBinlog: 1
+
+  metrics:
+    enabled: true
+
+  resources:
+    requests:
+      cpu: 4
+      memory: 4Gi
+    limits:
+      memory: 4Gi
+
+  myCnf: |
+    [mariadb]
+    bind-address=*
+    default_storage_engine=InnoDB
+    binlog_format=row
+    innodb_autoinc_lock_mode=2
+    innodb_buffer_pool_size=3200MB
+    max_allowed_packet=1GB
+
+  tolerations:
+    - effect: NoSchedule
+      key: node.mmontes.io/type
+      value: compute-large
+
+  affinity:
+    antiAffinityEnabled: true
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+              - key: node.mmontes.io/type
+                operator: In
+                values:
+                  - compute-large
+---
+apiVersion: k8s.mariadb.com/v1alpha1
+kind: PhysicalBackup
+metadata:
+  name: physicalbackup--tpl
+spec:
+  mariaDbRef:
+    name: mariadb
+  schedule:
+    suspend: true
+  compression: bzip2
+  storage:
+    s3:
+      bucket: database
+      prefix: mariadb-repl/recovery
+      endpoint: minio.storage.svc.cluster.local:443
+      accessKeyIdSecretKeyRef:
+        name: minio
+        key: access-key-id
+      secretAccessKeySecretKeyRef:
+        name: minio
+        key: secret-access-key
+      tls:
+        enabled: true
+        caSecretKeyRef:
+          name: homelab-bundle
+          key: ca.crt
+  timeout: 1h
+  podAffinity: true
+  tolerations:
+    - effect: NoSchedule
+      key: node.mmontes.io/type
+      value: compute-large
+  resources:
+    requests:
+      cpu: 1
+      memory: 512Mi
+    limits:
+      cpu: 1
+      memory: 512Mi
