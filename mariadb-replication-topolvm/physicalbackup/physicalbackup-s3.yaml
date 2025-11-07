@@ -26,6 +26,13 @@ spec:
         caSecretKeyRef:
           name: homelab-bundle
           key: ca.crt
+  stagingStorage:
+    persistentVolumeClaim:
+      resources:
+        requests:
+          storage: 10Gi
+      accessModes:
+        - ReadWriteOnce
   timeout: 1h
   podAffinity: true
   tolerations:

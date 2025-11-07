@@ -27,6 +27,13 @@ spec:
   #       caSecretKeyRef:
   #         name: homelab-bundle
   #         key: ca.crt
+  #   stagingStorage:
+  #     persistentVolumeClaim:
+  #       resources:
+  #         requests:
+  #           storage: 10Gi
+  #       accessModes:
+  #         - ReadWriteOnce
   #   restoreJob:
   #     resources:
   #       requests:
