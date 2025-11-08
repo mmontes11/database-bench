@@ -65,6 +65,7 @@ spec:
         enabled: true
         errorDurationThreshold: 30s
     gtidStrictMode: true
+    # semiSyncEnabled: false
     # semiSyncAckTimeout: 10s
     # semiSyncWaitPoint: AfterSync
     # syncBinlog: 1
@@ -108,6 +109,21 @@ spec:
                 operator: In
                 values:
                   - compute-large
+
+  livenessProbe:
+    failureThreshold: 10
+    periodSeconds: 10
+    timeoutSeconds: 5
+
+  readinessProbe:
+    failureThreshold: 10
+    periodSeconds: 10
+    timeoutSeconds: 5
+
+  startupProbe:
+    failureThreshold: 10
+    periodSeconds: 10
+    timeoutSeconds: 5
 ---
 apiVersion: k8s.mariadb.com/v1alpha1
 kind: PhysicalBackup
