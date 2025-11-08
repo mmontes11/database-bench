@@ -11,7 +11,9 @@ make physicalbackup
 # sysbench
 
 Threads: 4
+
 MariaDB version: 11.8.2
+
 MaxScale version: 23.08.5  
 
 ### Semi-sync replication
