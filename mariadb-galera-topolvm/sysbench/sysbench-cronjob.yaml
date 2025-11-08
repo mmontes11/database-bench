@@ -33,12 +33,13 @@ spec:
               - --tables=5
               - --table_size=1000000
               - --mysql-host=mariadb-primary.default.svc.cluster.local
+              # - --mysql-host=maxscale.default.svc.cluster.local
               - --mysql-port=3306
               - --mysql-user=sbtest
               - --mysql-password=MariaDB11!
               - --mysql-db=sbtest
               - --time=300 
-              - --threads=64
+              - --threads=4
               - --report-interval=1
               - run
             resources:
