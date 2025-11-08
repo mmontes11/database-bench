@@ -1,10 +1,14 @@
 include ../make/base.mk
 
-##@ MariaDB Galera on Topolvm
+##@ MariaDB replication on Topolvm
 
 .PHONY: mariadb
 mariadb: kubectl ## Deploy MariaDB.
 	$(KUBECTL) apply -f ./mariadb
+
+.PHONY: maxscale
+maxscale: kubectl ## Deploy MaxScale.
+	$(KUBECTL) apply -f ./maxscale
 
 .PHONY: sysbench-sql
 sysbench-sql: kubectl ## Prepare sysbench SQL resources.

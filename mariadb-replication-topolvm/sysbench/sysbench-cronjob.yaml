@@ -39,7 +39,7 @@ spec:
               - --mysql-password=MariaDB11!
               - --mysql-db=sbtest
               - --time=300 
-              - --threads=1
+              - --threads=4
               - --report-interval=1
               - run
             resources:

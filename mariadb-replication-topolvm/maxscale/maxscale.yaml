@@ -18,7 +18,7 @@ spec:
     generate: true
     adminUsername: mariadb-operator
     adminPasswordSecretKeyRef:
-      name: mariadb
+      name: maxscale
       key: password
     
   metrics:
@@ -29,6 +29,7 @@ spec:
       cpu: 2
       memory: 1Gi
     limits:
+      cpu: 2
       memory: 1Gi
 
   tolerations:

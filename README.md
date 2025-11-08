@@ -8,8 +8,8 @@ Database benchmarks in Kubernetes
 
 ### Storage benchmarks
 
-Refer to the [storage benchmarks ](https://github.com/mmontes11/storage-bench) for further reference
+Local storage via Topolvm on nvme drives is used as storage in all benchmarks. Refer to the [storage benchmarks ](https://github.com/mmontes11/storage-bench) for further reference.
 
 ### Kubernetes cluster
 
-Provisioned by [k8s-management](https://github.com/mmontes11/k8s-management) and [k8s-infrastructure](https://github.com/mmontes11/k8s-infrastructure)
+Kubernetes cluster based on Talos and provisioned by [k8s-management](https://github.com/mmontes11/k8s-management) and [k8s-infrastructure](https://github.com/mmontes11/k8s-infrastructure) is used in all benchmarks.
