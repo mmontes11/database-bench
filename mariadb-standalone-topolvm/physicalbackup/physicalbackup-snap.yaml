@@ -1,0 +1,22 @@
+apiVersion: k8s.mariadb.com/v1alpha1
+kind: PhysicalBackup
+metadata:
+  name: physicalbackup-snap
+spec:
+  mariaDbRef:
+    name: mariadb
+  schedule:
+    cron: "*/5 * * * *"
+    suspend: false
+    immediate: true
+  maxRetention: 720h # 30 days
+  storage:
+    volumeSnapshot:
+      volumeSnapshotClassName: topolvm
+  timeout: 1h
+  resources:
+    requests:
+      cpu: 1
+      memory: 512Mi
+    limits:
+      memory: 512Mi

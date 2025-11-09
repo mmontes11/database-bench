@@ -1,0 +1,99 @@
+apiVersion: k8s.mariadb.com/v1alpha1
+kind: MariaDB
+metadata:
+  name: mariadb
+spec:
+  rootPasswordSecretKeyRef:
+    name: mariadb
+    key: root-password
+
+  # bootstrapFrom:
+  #   backupContentType: Physical
+  #   s3:
+  #     bucket: database
+  #     prefix: mariadb-standalone/physical
+  #     endpoint: minio.storage.svc.cluster.local:443
+  #     accessKeyIdSecretKeyRef:
+  #       name: minio
+  #       key: access-key-id
+  #     secretAccessKeySecretKeyRef:
+  #       name: minio
+  #       key: secret-access-key
+  #     tls:
+  #       enabled: true
+  #       caSecretKeyRef:
+  #         name: homelab-bundle
+  #         key: ca.crt
+  #   stagingStorage:
+  #     persistentVolumeClaim:
+  #       resources:
+  #         requests:
+  #           storage: 10Gi
+  #       accessModes:
+  #         - ReadWriteOnce
+  #   restoreJob:
+  #     resources:
+  #       requests:
+  #         cpu: 1
+  #         memory: 512Mi
+  #       limits:
+  #         cpu: 1
+  #         memory: 512Mi
+
+  storage:
+    size: 30Gi
+    storageClassName: topolvm
+
+  metrics:
+    enabled: true
+
+  resources:
+    requests:
+      cpu: 4
+      memory: 4Gi
+    limits:
+      cpu: 4
+      memory: 4Gi
+
+  myCnf: |
+    [mariadb]
+    bind-address=*
+    default_storage_engine=InnoDB
+    binlog_format=row
+    max_allowed_packet=1G
+    innodb_autoinc_lock_mode=2
+    innodb_buffer_pool_size=3200MB
+    innodb_flush_method=O_DIRECT
+    thread_handling=pool-of-threads
+    thread_pool_size=4
+
+  tolerations:
+    - effect: NoSchedule
+      key: node.mmontes.io/type
+      value: compute-large
+
+  affinity:
+    antiAffinityEnabled: true
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+              - key: node.mmontes.io/type
+                operator: In
+                values:
+                  - compute-large
+
+  livenessProbe:
+    failureThreshold: 10
+    periodSeconds: 10
+    timeoutSeconds: 5
+
+  readinessProbe:
+    failureThreshold: 10
+    periodSeconds: 10
+    timeoutSeconds: 5
+
+  startupProbe:
+    failureThreshold: 10
+    periodSeconds: 10
+    timeoutSeconds: 5
